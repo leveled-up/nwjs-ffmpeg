@@ -15,14 +15,18 @@ jobs:
     - name: Clone nwjs-ffmpeg-prebuilt
       run: |
         git clone https://github.com/iteufel/nwjs-ffmpeg-prebuilt.git
-        cd nwjs-ffmpeg-prebuilt
-        mkdir out
+        mkdir nwjs-ffmpeg-prebuilt/out
     - name: Download dependencies
-      run: npm install
+      run: |
+        cd nwjs-ffmpeg-prebuilt
+        npm install
     - name: Build ffmpeg
-      run: sudo node build.js --arch x64 --version $NWJS_VERSION --out out/
+      run: |
+        cd nwjs-ffmpeg-prebuilt
+        sudo node build.js --arch x64 --version $NWJS_VERSION --out out/
     - name: Package artifacts
       run: |
+        cd nwjs-ffmpeg-prebuilt
         tar -cvf nwjs_ffmpeg.tar out/
         mv nwjs_ffmpeg.tar ../
         cd ../
