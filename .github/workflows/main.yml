@@ -20,7 +20,7 @@ jobs:
     - name: Download dependencies
       run: npm install
     - name: Build ffmpeg
-      run: sudo node build --arch x64 --version $NWJS_VERSION --out out/
+      run: sudo node build.js --arch x64 --version $NWJS_VERSION --out out/
     - name: Package artifacts
       run: |
         tar -cvf nwjs_ffmpeg.tar out/
