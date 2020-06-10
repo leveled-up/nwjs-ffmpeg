@@ -1,0 +1,34 @@
+name: Build ffmpeg
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      NWJS_VERSION: "0.46.0"
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+    - name: Clone nwjs-ffmpeg-prebuilt
+      run: |
+      	git clone https://github.com/iteufel/nwjs-ffmpeg-prebuilt.git
+	cd nwjs-ffmpeg-prebuilt
+	mkdir out
+    - name: Download dependencies
+      run: npm install
+    - name: Build ffmpeg
+      run: sudo node build --arch x64 --version $NWJS_VERSION --out out/
+    - name: Package artifacts
+      run: |
+      	tar -cvf nwjs_ffmpeg.tar out/
+      	mv nwjs_ffmpeg.tar ../
+      	cd ../
+    - name: Store artifact
+      uses: actions/upload-artifact@v1
+      with:
+        name: "nwjs_ffmpeg.tar"
+        path: "nwjs_ffmpeg.tar"
+
