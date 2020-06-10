@@ -23,10 +23,10 @@ jobs:
         cd nwjs-ffmpeg-prebuilt
         sudo node build.js --arch x64 --version $NWJS_VERSION --out out/
     - name: Package artifact
-      run: tar -cvf output.tar nwjs-ffmpeg-prebuilt/build/chromium/src/out/
+      run: tar -cvf nwjs_ffmpeg.tar nwjs-ffmpeg-prebuilt/build/chromium/src/out/*.zip
     - name: Store artifact
       uses: actions/upload-artifact@v1
       with:
-        name: "output.tar"
-        path: "output.tar"
+        name: "nwjs_ffmpeg.tar"
+        path: "nwjs_ffmpeg.tar"
 
