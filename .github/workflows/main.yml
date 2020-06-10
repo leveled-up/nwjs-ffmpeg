@@ -13,9 +13,7 @@ jobs:
       with:
         node-version: '12.x'
     - name: Clone nwjs-ffmpeg-prebuilt
-      run: |
-        git clone https://github.com/iteufel/nwjs-ffmpeg-prebuilt.git
-        mkdir nwjs-ffmpeg-prebuilt/_output
+      run: git clone https://github.com/iteufel/nwjs-ffmpeg-prebuilt.git
     - name: Download dependencies
       run: |
         cd nwjs-ffmpeg-prebuilt
@@ -23,12 +21,10 @@ jobs:
     - name: Build ffmpeg
       run: |
         cd nwjs-ffmpeg-prebuilt
-        sudo node build.js --arch x64 --version $NWJS_VERSION --out _output
-        find .
-        touch dummy.zip
-        cp *.zip _output
-        tar -cvf ../output.tar _output
-    - name: Store zip as artifact
+        sudo node build.js --arch x64 --version $NWJS_VERSION --out out/
+    - name: Package artifact
+      run: tar -cvf output.tar nwjs-ffmpeg-prebuilt/build/chromium/src/out/
+    - name: Store artifact
       uses: actions/upload-artifact@v1
       with:
         name: "output.tar"
