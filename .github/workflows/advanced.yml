@@ -1,0 +1,26 @@
+name: Build ffmpeg (new)
+on:
+  workflow_dispatch:
+    inputs:
+      NWJS_VERSION:
+        description: "Nw.js branch to build against"
+        required: true
+        default: "nw46"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      NWJS_VERSION: ${{ github.event.inputs.NWJS_VERSION }}
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+      - name: Build ffmpeg
+        run: ./advanced_linux.sh $NWJS_VERSION
+      - name: Upload the artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: linux-nwjs-ffmpeg
+          path: "nwjs-build/nwjs/src/out/output.tar"

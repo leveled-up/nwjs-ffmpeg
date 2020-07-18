@@ -1,44 +1,49 @@
 name: Build ffmpeg
 
-on: [push]
-
+on:
+  workflow_dispatch:
+    inputs:
+      NWJS_VERSION:
+        description: "Nw.js version to build against"
+        required: true
+        default: "0.46.0"
 jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      NWJS_VERSION: "0.46.0"
+      NWJS_VERSION: ${{ github.event.inputs.NWJS_VERSION }}
     steps:
-    - uses: actions/checkout@v1
-    - uses: actions/setup-node@v1
-      with:
-        node-version: '12.x'
-    - name: Clone nwjs-ffmpeg-prebuilt
-      run: git clone https://github.com/iteufel/nwjs-ffmpeg-prebuilt.git
-    - name: Download dependencies
-      run: |
-        cd nwjs-ffmpeg-prebuilt
-        npm install
-    - name: Build ffmpeg
-      run: |
-        cd nwjs-ffmpeg-prebuilt
-        sudo node build.js --arch x64 --version $NWJS_VERSION --out out/
-    - name: Package artifact
-      run: tar -cvf nwjs_ffmpeg.tar nwjs-ffmpeg-prebuilt/build/chromium/src/out/*.zip
-    - name: Store artifact
-      uses: actions/upload-artifact@v1
-      with:
-        name: "nwjs_ffmpeg.tar"
-        path: "nwjs_ffmpeg.tar"
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+      - name: Clone nwjs-ffmpeg-prebuilt
+        run: git clone https://github.com/iteufel/nwjs-ffmpeg-prebuilt.git
+      - name: Download dependencies
+        run: |
+          cd nwjs-ffmpeg-prebuilt
+          npm install
+      - name: Build ffmpeg
+        run: |
+          cd nwjs-ffmpeg-prebuilt
+          sudo node build.js --arch x64 --version $NWJS_VERSION --out out/
+      - name: Package artifact
+        run: tar -cvf nwjs_ffmpeg.tar nwjs-ffmpeg-prebuilt/build/chromium/src/out/*.zip
+      - name: Store artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: "nwjs_ffmpeg.tar"
+          path: "nwjs_ffmpeg.tar"
   build2:
     runs-on: ubuntu-latest
     steps:
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
-          node-version: '12.x'
+          node-version: "12.x"
       - uses: actions/checkout@v2
         with:
-          repository: 'iteufel/nwjs-ffmpeg-prebuilt'
+          repository: "iteufel/nwjs-ffmpeg-prebuilt"
       - name: npm install, build and test
         run: |
           npm install
@@ -50,6 +55,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          args: 'build/out/*.zip'
-
-
+          args: "build/out/*.zip"
