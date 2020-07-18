@@ -18,7 +18,9 @@ jobs:
         with:
           node-version: "12.x"
       - name: Build ffmpeg
-        run: ./advanced_linux.sh $NWJS_VERSION
+        run: |
+          chmod +x advanced_linux.sh
+          ./advanced_linux.sh $NWJS_VERSION
       - name: Upload the artifacts
         uses: actions/upload-artifact@v2
         with:
